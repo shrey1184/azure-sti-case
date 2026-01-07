@@ -1,0 +1,17 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+
+name: hf-wav2vec2-v2
+endpoint_name: wav2vec2-sti-endpoint
+
+model: azureml:wav2vec2-cpu:1
+environment: azureml:wav2vec2-env:2
+
+instance_type: Standard_DS1_v2
+instance_count: 1
+
+request_settings:
+  request_timeout_ms: 60000
+
+code_configuration:
+  code: .
+  scoring_script: score.py

@@ -1,0 +1,16 @@
+# Azure ML SDK
+azure-ai-ml>=1.12.0
+azure-identity>=1.14.0
+
+# PyTorch
+torch>=2.0.0
+
+# Audio processing
+soundfile>=0.12.0
+numpy>=1.24.0
+
+# HuggingFace Transformers
+transformers>=4.35.0
+
+# For resampling audio (optional but recommended)
+librosa>=0.10.0
