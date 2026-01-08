@@ -1,10 +1,10 @@
 $schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
 
-name: hf-wav2vec2-v2
-endpoint_name: wav2vec2-sti-endpoint
+name: hf-hubert-v1
+endpoint_name: hf-hubert2-endpoint-sti
 
-model: azureml:wav2vec2-cpu:1
-environment: azureml:wav2vec2-env:2
+model: azureml:hubert-cpu:1
+environment: azureml:hubert-env:1
 
 instance_type: Standard_DS1_v2
 instance_count: 1

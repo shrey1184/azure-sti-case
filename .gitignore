@@ -4,10 +4,36 @@ __pycache__/
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
 venv/
 env/
 .venv/
 .env
+ENV/
+env.bak/
+venv.bak/
+
+# Conda
+conda.lock
+environment.lock.yml
+.conda/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -18,6 +44,14 @@ config.json
 .azureml/
 outputs/
 logs/
+mlruns/
+azureml-logs/
+azureml_runs/
+
+# Azure Credentials
+.azure/
+*.pem
+*.key
 
 # Model files (large binary files - use Git LFS or Azure ML registry)
 *.safetensors
@@ -28,17 +62,38 @@ logs/
 *.h5
 *.pkl
 *.pickle
+*.tar.gz
+*.tgz
+*.zip
+model/tf_model.h5
+model/*.bin
+
+# HuggingFace cache
+.cache/
+huggingface/
+transformers_cache/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+*.bak
 
 # Logs
 *.log
-env
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment variables
+.env.local
+.env.*.local

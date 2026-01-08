@@ -3,14 +3,14 @@ import logging
 import json
 import torch
 import numpy as np
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from transformers import HubertModel, Wav2Vec2FeatureExtractor
 
 def init():
     """
     This function is called when the container is initialized/started, usually after driver/Docker startup.
     We load the model here so that it is only loaded once.
     """
-    global model, processor
+    global model, feature_extractor
     
     # AZUREML_MODEL_DIR is an environment variable created during deployment.
     # It is the path to the model folder (./azureml-models/$MODEL_NAME/$VERSION)
@@ -24,11 +24,11 @@ def init():
     logging.info(f"Loading model from: {model_path}")
     
     try:
-        # Load the processor and model from the local model directory
-        processor = Wav2Vec2Processor.from_pretrained(model_path)
-        model = Wav2Vec2ForCTC.from_pretrained(model_path)
+        # Load the feature extractor and model from the local model directory
+        feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(model_path)
+        model = HubertModel.from_pretrained(model_path)
         
-        logging.info("Model and processor loaded successfully.")
+        logging.info("HuBERT model and feature extractor loaded successfully.")
     except Exception as e:
         logging.error(f"Error loading model: {str(e)}")
         raise e
@@ -58,27 +58,27 @@ def run(raw_data):
         audio_buffer = io.BytesIO(audio_bytes)
         speech_array, sample_rate = sf.read(audio_buffer)
         
-        # Resample to 16000 Hz if needed (wav2vec2 expects 16kHz)
+        # Resample to 16000 Hz if needed (HuBERT expects 16kHz)
         if sample_rate != 16000:
             import librosa
             speech_array = librosa.resample(speech_array, orig_sr=sample_rate, target_sr=16000)
             sample_rate = 16000
         
-        # Process audio with wav2vec2
-        inputs = processor(speech_array, sampling_rate=sample_rate, return_tensors="pt", padding=True)
+        # Process audio with HuBERT
+        inputs = feature_extractor(speech_array, sampling_rate=sample_rate, return_tensors="pt", padding=True)
         
         with torch.no_grad():
-            logits = model(inputs.input_values).logits
+            outputs = model(inputs.input_values)
         
-        # Get predicted ids
-        predicted_ids = torch.argmax(logits, dim=-1)
+        # Extract hidden states (features)
+        hidden_states = outputs.last_hidden_state
         
-        # Decode transcription
-        transcription = processor.batch_decode(predicted_ids)[0]
+        # Return the embeddings
+        embeddings = hidden_states.mean(dim=1).squeeze().tolist()
         
-        logging.info(f"Transcription: {transcription}")
+        logging.info(f"Generated embeddings of length: {len(embeddings)}")
         
-        return {"status": "success", "transcription": transcription}
+        return {"status": "success", "embeddings": embeddings}
         
     except Exception as e:
         logging.error(f"Error processing request: {str(e)}")

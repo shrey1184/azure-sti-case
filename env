@@ -1,0 +1,4 @@
+REST_END_POINT: "https://wav2vec2-sti-endpoint.centralindia.inference.ml.azure.com/score"
+
+AZURE_ML_ENDPOINT=https://your-endpoint-url
+AZURE_ML_INFERENCE_KEY=YOUR_KEY_HERE
